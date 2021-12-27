@@ -54,13 +54,22 @@ class Match:
             "home":self.home,
             "away":self.away
         }
+    def toHTML(self):
+        return """\
+            <h2>{home} VS. {away}</h2>
+            <ul>
+                <li>Kezdés: {time}</li>
+            </ul>
+            """.format(home = self.home, away = self.away, time = self.time)
         
-
+matches_html = ""
 with open('datas/today_matches.json') as json_file:
     data = json.load(json_file)
+    
     for match in data['response']:
         if match['league']['id']==12:
             nba_match = Match(match['date'],match['time'],match['teams']['home']['name'], match['teams']['away']['name'])
+            matches_html += nba_match.toHTML()
             print(nba_match.toJSON())
 
 
@@ -68,18 +77,20 @@ with open('datas/today_matches.json') as json_file:
 Here comes the email sending --->
 '''
 
-html = """\
+html = '''\
 <html>
   <body>
-    <p>Hi,<br>
-       How are you?<br>
-       <a href="http://www.realpython.com">Real Python</a> 
-       has many great tutorials.
+    <h1>NBA Mérkőzések - {date}</h1>
+    <p>
+    A levél a mai napi NBA mérközések listáját tartalmazza. 
+    Jó szórakozást!
     </p>
-    <p>{length} - {ordinal}</p>
+    
+    {matches}
+    <a href="https://www.nba.com>"További infókért katt ide..</a> 
   </body>
 </html>
-""".format(length='multi-line', ordinal='second')
+'''.format(date=TODAY, matches=matches_html)
 
 
 with smtplib.SMTP(host=HOST, port=PORT) as smtp:
@@ -87,11 +98,7 @@ with smtplib.SMTP(host=HOST, port=PORT) as smtp:
     smtp.starttls()
     smtp.ehlo()
     smtp.login(EMAIL_ADDRESS, PASSWORD)
-    '''
-    subject = 'Szia Zita ra ersz holnap'
-    body = 'Tok jo lenne egyet ebedelni'
-    msg = f'Subject: {subject}\n\n{body}'
-    '''
+    
     message = MIMEMultipart("alternative")
     message["Subject"] = TODAY + " napi NBA - meccsek"
     
