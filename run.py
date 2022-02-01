@@ -80,14 +80,15 @@ Here comes the email sending --->
 html = '''\
 <html>
   <body>
-    <h1>NBA Mérkőzések - {date}</h1>
+    <h1>NBA Games - {date}</h1>
     <p>
-    A levél a mai napi NBA mérközések listáját tartalmazza. 
-    Jó szórakozást!
+    These teams are playing tonight.
+    Have fun!
     </p>
     
     {matches}
-    <a href="https://www.nba.com>"További infókért katt ide..</a> 
+    
+    <a href="https://www.nba.com>"Check out more info..</a> 
   </body>
 </html>
 '''.format(date=TODAY, matches=matches_html)
@@ -100,7 +101,7 @@ with smtplib.SMTP(host=HOST, port=PORT) as smtp:
     smtp.login(EMAIL_ADDRESS, PASSWORD)
     
     message = MIMEMultipart("alternative")
-    message["Subject"] = TODAY + " napi NBA - meccsek"
+    message["Subject"] = TODAY + " today's NBA matches"
     
     part2 = MIMEText(html, "html")
     message.attach(part2)
