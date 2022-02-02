@@ -64,7 +64,7 @@ class Match:
             """.format(home = self.home, away = self.away, time = self.time)
         
 matches_html = ""
-with open('datas/today_matches.json') as json_file:
+with open(os.path.expanduser('~/Projects/nba-tracker/datas/today_matches.json')) as json_file:
     data = json.load(json_file)
     
     for match in data['response']:
