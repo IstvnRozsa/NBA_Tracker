@@ -4,6 +4,7 @@ import smtplib
 from datetime import datetime
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+import os
 
 PORT = 0
 HOST = ""
@@ -12,7 +13,7 @@ PASSWORD = ""
 API_KEY=""
 TODAY = datetime.today().strftime('%Y-%m-%d')
 
-with open('config.json') as json_file:
+with open(os.path.expanduser('~/Projects/nba-tracker/config.json')) as json_file:
     data = json.load(json_file)
     PORT = data["email"]["port"]
     HOST = data["email"]["host"]
@@ -33,7 +34,7 @@ headers = {
 response = requests.request("GET", url, headers=headers, params=querystring)
 
 
-with open('datas/today_matches.json', 'w') as f:
+with open(os.path.expanduser('~/Projects/nba-tracker/datas/today_matches.json'), 'w') as f:
     f.write(response.text)
 
 
